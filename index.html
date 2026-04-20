@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Drum Trainer Pro</title>
+    <title>YouTube Drum Trainer Pro - GitHub Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .drum-glow { box-shadow: 0 0 40px rgba(239, 68, 68, 0.15); }
+        .drum-glow { box-shadow: 0 0 40px rgba(239, 68, 68, 0.2); }
         #player-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -24,23 +24,23 @@
         }
         input[type=range] { appearance: none; background: #374151; height: 8px; border-radius: 4px; }
         input[type=range]::-webkit-slider-thumb {
-            appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ef4444; cursor: pointer; border: 2px solid white;
+            appearance: none; height: 22px; width: 22px; border-radius: 50%; background: #ef4444; cursor: pointer; border: 2px solid white;
         }
-        .ramp-active { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0%, 100% { border-color: #ef4444; } 50% { border-color: #7f1d1d; } }
+        .ramp-active { animation: pulse-red 2s infinite; border-color: #ef4444 !important; }
+        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 10px #ef4444; } 50% { box-shadow: 0 0 25px #ef4444; } }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-4 font-sans">
 
     <div class="max-w-3xl w-full bg-gray-800 rounded-[2.5rem] p-6 md:p-10 drum-glow border border-gray-700 mt-4 shadow-2xl">
         <header class="text-center mb-8">
-            <h1 class="text-4xl font-black text-red-500 mb-1 tracking-tighter">DRUM TRAINER <span class="text-white">PRO</span></h1>
-            <p class="text-gray-400 text-[10px] uppercase tracking-[0.3em] font-bold">A-B Loop & Auto Tempo Ramp</p>
+            <h1 class="text-4xl font-black text-red-500 mb-1 tracking-tighter uppercase">Drum Trainer <span class="text-white">Pro</span></h1>
+            <p class="text-gray-400 text-[10px] uppercase tracking-[0.3em] font-bold">GitHub Edition • A-B Loop • Tempo Ramp</p>
         </header>
 
         <div class="flex gap-3 mb-8">
-            <input type="text" id="youtube-url" placeholder="Plak YouTube URL..." 
-                   class="flex-1 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-red-500 transition shadow-inner">
+            <input type="text" id="youtube-url" placeholder="Plak YouTube URL (bv. https://youtu.be/...)" 
+                   class="flex-1 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-red-500 transition shadow-inner text-white">
             <button onclick="handleLoadBtn()" class="bg-red-600 hover:bg-red-500 px-8 py-4 rounded-2xl font-black transition text-sm uppercase shadow-lg">Laden</button>
         </div>
 
@@ -49,42 +49,65 @@
         </div>
 
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="ramp-card" class="bg-gray-900/50 rounded-3xl p-6 border border-gray-700 space-y-4">
+            
+            <div id="ramp-card" class="bg-gray-900/50 rounded-3xl p-6 border border-gray-700 space-y-4 transition-all">
                 <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest">Tempo Ramp</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] text-gray-400 uppercase mb-1">Start Tempo</label>
-                        <select id="ramp-start-speed" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm">
-                            <option value="0.5">50%</option><option value="0.7" selected>70%</option><option value="0.9">90%</option>
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Start Tempo</label>
+                        <select id="ramp-start-speed" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-red-500">
+                            <option value="0.5">50%</option>
+                            <option value="0.6">60%</option>
+                            <option value="0.7" selected>70%</option>
+                            <option value="0.8">80%</option>
+                            <option value="0.9">90%</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] text-gray-400 uppercase mb-1">Minuten</label>
-                        <input type="number" id="ramp-duration" value="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm">
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Duur (Min)</label>
+                        <input type="number" id="ramp-duration" value="5" min="1" max="30" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
-                <button id="ramp-btn" onclick="toggleRamp()" class="w-full py-3 rounded-xl border border-gray-600 font-bold text-xs uppercase hover:bg-red-600 transition">Start Ramp</button>
+                <button id="ramp-btn" onclick="toggleRamp()" class="w-full py-3 rounded-xl border border-gray-600 font-bold text-xs uppercase tracking-widest hover:bg-red-600 hover:border-transparent transition">
+                    Start Tempo Ramp
+                </button>
+                <div id="ramp-status-text" class="hidden text-center text-[10px] text-red-500 font-bold animate-pulse">
+                    RAMP ACTIEF: <span id="ramp-timer-display">00:00</span>
+                </div>
             </div>
 
             <div class="bg-gray-900/50 rounded-3xl p-6 border border-gray-700 flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest">A-B Loop</h3>
-                    <button onclick="toggleLoop()" id="master-loop-btn" class="text-[10px] font-bold bg-gray-800 px-4 py-1 rounded-full border border-gray-700">LOOP: <span id="loop-status">UIT</span></button>
+                    <button onclick="toggleLoop()" id="master-loop-btn" class="text-[10px] font-bold bg-gray-800 px-4 py-1 rounded-full border border-gray-700 hover:border-red-500 transition">
+                        LOOP: <span id="loop-status">UIT</span>
+                    </button>
                 </div>
                 <div class="flex items-center justify-around">
-                    <button onclick="setMarker('start')" class="text-center"><span class="block text-[10px] font-bold text-red-500 uppercase">Start (A)</span><span id="label-start" class="font-mono text-xl font-black">00:00</span></button>
+                    <button onclick="setMarker('start')" class="text-center group">
+                        <span class="block text-[10px] font-bold text-red-500 uppercase group-hover:scale-110 transition">Start (A)</span>
+                        <span id="label-start" class="font-mono text-xl font-black">00:00</span>
+                    </button>
                     <div class="h-10 w-px bg-gray-700"></div>
-                    <button onclick="setMarker('end')" class="text-center"><span class="block text-[10px] font-bold text-red-500 uppercase">Eind (B)</span><span id="label-end" class="font-mono text-xl font-black">--:--</span></button>
+                    <button onclick="setMarker('end')" class="text-center group">
+                        <span class="block text-[10px] font-bold text-red-500 uppercase group-hover:scale-110 transition">Eind (B)</span>
+                        <span id="label-end" class="font-mono text-xl font-black">--:--</span>
+                    </button>
                 </div>
             </div>
         </div>
 
         <div class="mt-8 bg-gray-900/50 rounded-3xl p-6 border border-gray-700 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest">Snelheid</h3>
+                <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest">Handmatige Snelheid</h3>
                 <div class="text-2xl font-black text-red-500"><span id="speed-display">1.00</span>x</div>
             </div>
             <input type="range" id="speed-slider" min="0.25" max="2.0" step="0.05" value="1.0" class="w-full">
+            <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase">
+                <span>0.25x</span>
+                <span>1.0x (Normaal)</span>
+                <span>2.0x</span>
+            </div>
         </div>
     </div>
 
@@ -93,130 +116,182 @@
         let isLooping = false;
         let loopStart = 0;
         let loopEnd = 9999;
-        let rampInterval;
         let rampActive = false;
+        let rampInterval;
 
-        // API laden
+        // 1. YouTube IFrame API laden
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        // Deze functie MOET globaal zijn
+        // 2. Initialiseer Player
         window.onYouTubeIframeAPIReady = function() {
-            console.log("YouTube API Ready");
-            initPlayer('dQw4w9WgXcQ'); 
+            const lastId = localStorage.getItem('lastYoutubeId') || 'dQw4w9WgXcQ';
+            initPlayer(lastId);
         };
 
         function initPlayer(videoId) {
-    const container = document.getElementById('player-container');
-    
-    // We proberen de API te laden, maar voegen een 'origin' toe die vaak geaccepteerd wordt
-    const myOrigin = window.location.origin === "null" ? "*" : window.location.origin;
-
-    container.innerHTML = `<iframe id="player" 
-        src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(myOrigin)}&widget_referrer=${encodeURIComponent(myOrigin)}" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen></iframe>`;
-
-    // Koppel de API aan het nieuwe iframe
-    setTimeout(() => {
-        player = new YT.Player('player', {
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange,
-                'onError': (e) => console.log("Nog steeds fout 153? Test dit buiten de AI-chat!", e.data)
+            // Verwijder oude player indien aanwezig
+            if (player) {
+                try { player.destroy(); } catch(e) {}
             }
-        });
-    }, 500);
-}
 
-        function onPlayerReady() {
-            setInterval(checkLoop, 100);
+            // Bepaal de origin voor GitHub Pages of Localhost
+            const origin = window.location.origin === "null" ? "*" : window.location.origin;
+
+            player = new YT.Player('player', {
+                videoId: videoId,
+                playerVars: {
+                    'enablejsapi': 1,
+                    'origin': origin,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'autoplay': 0,
+                    'controls': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
         }
 
+        function onPlayerReady() {
+            console.log("Drum Trainer gereed!");
+            setInterval(checkLoop, 150);
+        }
+
+        function onPlayerError(e) {
+            console.error("YouTube Error:", e.data);
+            if (e.data === 150 || e.data === 101) {
+                alert("Deze video staat embedding niet toe. Probeer een andere video!");
+            }
+        }
+
+        // 3. Loop Logica
         function checkLoop() {
             if (isLooping && player && player.getCurrentTime) {
                 const now = player.getCurrentTime();
-                if (now >= loopEnd || now < (loopStart - 0.5)) {
+                if (now >= loopEnd || now < (loopStart - 0.3)) {
                     player.seekTo(loopStart);
                 }
             }
         }
 
-        function onPlayerStateChange(event) {
-            // Player logica
-        }
-
-        // Handlers
-        function handleLoadBtn() {
-            const val = document.getElementById('youtube-url').value;
-            const id = extractVideoID(val);
-            if (id) initPlayer(id);
-        }
-
-        function extractVideoID(url) {
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[7].length == 11) ? match[7] : false;
+        function toggleLoop() {
+            isLooping = !isLooping;
+            const btn = document.getElementById('master-loop-btn');
+            const status = document.getElementById('loop-status');
+            
+            if (isLooping) {
+                status.innerText = "AAN";
+                btn.classList.add('text-red-500', 'border-red-500');
+                if (player) player.playVideo();
+            } else {
+                status.innerText = "UIT";
+                btn.classList.remove('text-red-500', 'border-red-500');
+            }
         }
 
         function setMarker(type) {
             if (!player || !player.getCurrentTime) return;
             const t = player.getCurrentTime();
-            if (type === 'start') { loopStart = t; } else { loopEnd = t; }
+            if (type === 'start') {
+                loopStart = t;
+            } else {
+                loopEnd = t;
+            }
+            updateUI();
+        }
+
+        function updateUI() {
             document.getElementById('label-start').innerText = formatTime(loopStart);
-            document.getElementById('label-end').innerText = formatTime(loopEnd);
+            document.getElementById('label-end').innerText = (loopEnd > 9000) ? "--:--" : formatTime(loopEnd);
         }
 
-        function toggleLoop() {
-            isLooping = !isLooping;
-            document.getElementById('loop-status').innerText = isLooping ? "AAN" : "UIT";
-            document.getElementById('master-loop-btn').style.borderColor = isLooping ? "#ef4444" : "#374151";
-        }
-
-        function formatTime(s) {
-            const m = Math.floor(s / 60);
-            const sec = Math.floor(s % 60);
-            return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
-        }
-
-        // Speed Slider
-        document.getElementById('speed-slider').oninput = function() {
+        // 4. Snelheid & Ramp Logica
+        const speedSlider = document.getElementById('speed-slider');
+        speedSlider.oninput = function() {
+            if (rampActive) stopRamp();
             const val = parseFloat(this.value);
-            if (player && player.setPlaybackRate) player.setPlaybackRate(val);
-            document.getElementById('speed-display').innerText = val.toFixed(2);
+            applySpeed(val);
         };
 
-        function toggleRamp() {
-            if (rampActive) {
-                clearInterval(rampInterval);
-                rampActive = false;
-                document.getElementById('ramp-btn').innerText = "Start Ramp";
-            } else {
-                startRamp();
+        function applySpeed(val) {
+            if (player && player.setPlaybackRate) {
+                player.setPlaybackRate(val);
+                document.getElementById('speed-display').innerText = val.toFixed(2);
+                speedSlider.value = val;
             }
+        }
+
+        function toggleRamp() {
+            rampActive ? stopRamp() : startRamp();
         }
 
         function startRamp() {
             rampActive = true;
-            let startSpeed = parseFloat(document.getElementById('ramp-start-speed').value);
-            let duration = parseInt(document.getElementById('ramp-duration').value) * 60;
+            const startSpeed = parseFloat(document.getElementById('ramp-start-speed').value);
+            const durationSec = parseInt(document.getElementById('ramp-duration').value) * 60;
             let elapsed = 0;
+
             document.getElementById('ramp-btn').innerText = "Stop Ramp";
-            
+            document.getElementById('ramp-card').classList.add('ramp-active');
+            document.getElementById('ramp-status-text').classList.remove('hidden');
+
+            applySpeed(startSpeed);
+
+            if (rampInterval) clearInterval(rampInterval);
             rampInterval = setInterval(() => {
                 elapsed++;
-                let progress = elapsed / duration;
-                let currentSpeed = startSpeed + (progress * (1.0 - startSpeed));
-                if (currentSpeed >= 1.0) {
-                    currentSpeed = 1.0;
-                    clearInterval(rampInterval);
-                }
-                if (player && player.setPlaybackRate) player.setPlaybackRate(currentSpeed);
-                document.getElementById('speed-display').innerText = currentSpeed.toFixed(2);
-                document.getElementById('speed-slider').value = currentSpeed;
+                const progress = Math.min(elapsed / durationSec, 1);
+                const currentSpeed = startSpeed + (progress * (1.0 - startSpeed));
+                
+                applySpeed(currentSpeed);
+
+                const remaining = durationSec - elapsed;
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                document.getElementById('ramp-timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+                if (progress >= 1) stopRamp();
             }, 1000);
+        }
+
+        function stopRamp() {
+            rampActive = false;
+            clearInterval(rampInterval);
+            document.getElementById('ramp-btn').innerText = "Start Tempo Ramp";
+            document.getElementById('ramp-card').classList.remove('ramp-active');
+            document.getElementById('ramp-status-text').classList.add('hidden');
+        }
+
+        // 5. Helpers
+        function handleLoadBtn() {
+            const url = document.getElementById('youtube-url').value;
+            const id = extractVideoID(url);
+            if (id) {
+                localStorage.setItem('lastYoutubeId', id);
+                loopStart = 0;
+                loopEnd = 9999;
+                isLooping = false;
+                updateUI();
+                initPlayer(id);
+            }
+        }
+
+        function extractVideoID(url) {
+            const reg = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(reg);
+            return (match && match[7].length == 11) ? match[7] : false;
+        }
+
+        function formatTime(s) {
+            const min = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
         }
     </script>
 </body>
